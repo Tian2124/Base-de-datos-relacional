@@ -1,0 +1,82 @@
+erDiagram
+    EDICION ||--o| SEDE : utiliza
+    SEDE ||--|{ SALA : contiene
+    EDICION ||--|{ PARTICIPACION : registra
+    PERSONA ||--o{ PARTICIPACION : realiza
+    PARTICIPACION ||--o| ASISTENTE : "rol solapado"
+    PARTICIPACION ||--o| PONENTE : "rol solapado"
+    EDICION ||--|{ SESION : contiene
+    SESION ||--o| CHARLA : "tipo disjunto"
+    SESION ||--o| TALLER : "tipo disjunto"
+    ASISTENTE }o--o{ SESION : se_inscribe
+    PONENTE }o--o{ SESION : participa
+    SESION }o--o{ SESION : requiere
+    EMPRESA }o--o{ EDICION : patrocina
+    ASISTENTE ||--o{ INSCRIPCION : formaliza
+    SESION ||--o{ INSCRIPCION : recibe
+    PONENTE ||--o{ ASIGNACION : ocupa
+    SESION ||--o{ ASIGNACION : programa
+    EMPRESA ||--o{ ACUERDO : firma
+    EDICION ||--o{ ACUERDO : recibe
+
+    EDICION {
+        string nombre
+        int ano
+        string modalidad
+        date fecha_inicio
+        date fecha_fin
+        string estado
+    }
+    SEDE {
+        string nombre
+        string ciudad
+    }
+    SALA {
+        string nombre
+        int capacidad
+    }
+    PERSONA {
+        string nombre
+        string correo
+        string pais
+    }
+    PARTICIPACION {
+        datetime fecha_registro
+    }
+    ASISTENTE {
+        string acreditacion
+    }
+    PONENTE {
+        string biografia
+    }
+    SESION {
+        string titulo
+        string resumen
+        datetime inicio
+        datetime fin
+    }
+    CHARLA {
+        int minutos_preguntas
+    }
+    TALLER {
+        int cupo_practico
+        string requisitos_materiales
+    }
+    INSCRIPCION {
+        date fecha
+        string estado
+        boolean asistencia
+    }
+    ASIGNACION {
+        string rol
+        int orden_programa
+    }
+    EMPRESA {
+        string razon_social
+        string identificador_fiscal
+    }
+    ACUERDO {
+        string categoria
+        decimal monto
+        date fecha_confirmacion
+    }

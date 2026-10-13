@@ -1,0 +1,115 @@
+erDiagram
+    EDITION {
+        bigint edition_id PK
+        varchar name UK
+        integer edition_year
+        varchar modality
+        date starts_on
+        date ends_on
+        varchar status
+        bigint venue_id FK
+    }
+    VENUE {
+        bigint venue_id PK
+        varchar name
+        varchar city
+        varchar address
+    }
+    ROOM {
+        bigint room_id PK
+        bigint venue_id FK
+        varchar name
+        integer capacity
+    }
+    PERSON {
+        bigint person_id PK
+        varchar full_name
+        varchar email UK
+        varchar country
+    }
+    EDITION_PARTICIPANT {
+        bigint edition_id PK,FK
+        bigint person_id PK,FK
+        timestamptz registered_at
+    }
+    ATTENDEE {
+        bigint edition_id PK,FK
+        bigint person_id PK,FK
+        smallint accreditation_type_id FK
+    }
+    SPEAKER {
+        bigint edition_id PK,FK
+        bigint person_id PK,FK
+        text biography
+    }
+    SESSION {
+        bigint session_id PK
+        bigint edition_id FK
+        varchar title
+        varchar kind
+        timestamptz starts_at
+        timestamptz ends_at
+        bigint venue_id FK
+        bigint room_id FK
+        varchar streaming_platform
+        varchar streaming_url
+        integer question_minutes
+        integer practical_capacity
+        text material_requirements
+    }
+    SESSION_PREREQUISITE {
+        bigint session_id PK,FK
+        bigint prerequisite_session_id PK,FK
+    }
+    REGISTRATION {
+        bigint edition_id PK,FK
+        bigint person_id PK,FK
+        bigint session_id PK,FK
+        timestamptz registered_at
+        varchar status
+        boolean attended
+    }
+    SESSION_SPEAKER {
+        bigint edition_id PK,FK
+        bigint session_id PK,FK
+        bigint person_id PK,FK
+        varchar speaker_role
+        smallint program_order
+    }
+    ACCREDITATION_TYPE {
+        smallint accreditation_type_id PK
+        varchar name UK
+        numeric price
+    }
+    SPONSOR_COMPANY {
+        bigint company_id PK
+        varchar legal_name UK
+        varchar tax_identifier UK
+    }
+    SPONSORSHIP_AGREEMENT {
+        bigint agreement_id PK
+        bigint company_id FK
+        bigint edition_id FK
+        varchar category
+        numeric amount
+        date confirmed_on
+    }
+
+    VENUE ||--o{ ROOM : contains
+    VENUE ||--o{ EDITION : hosts
+    EDITION ||--o{ EDITION_PARTICIPANT : has
+    PERSON ||--o{ EDITION_PARTICIPANT : joins
+    EDITION_PARTICIPANT ||--o| ATTENDEE : role
+    EDITION_PARTICIPANT ||--o| SPEAKER : role
+    ACCREDITATION_TYPE ||--o{ ATTENDEE : defines
+    EDITION ||--o{ SESSION : schedules
+    VENUE ||--o{ SESSION : locates
+    ROOM ||--o{ SESSION : hosts
+    SESSION ||--o{ SESSION_PREREQUISITE : depends_on
+    SESSION ||--o{ SESSION_PREREQUISITE : prerequisite_for
+    ATTENDEE ||--o{ REGISTRATION : makes
+    SESSION ||--o{ REGISTRATION : receives
+    SPEAKER ||--o{ SESSION_SPEAKER : assigned
+    SESSION ||--o{ SESSION_SPEAKER : includes
+    SPONSOR_COMPANY ||--o{ SPONSORSHIP_AGREEMENT : signs
+    EDITION ||--o{ SPONSORSHIP_AGREEMENT : receives
